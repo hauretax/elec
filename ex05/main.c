@@ -22,9 +22,10 @@ int main(void){
             }
             while(!(PIND & (1 << PD3)))
                 ;
-        }
-        for(int x = 0; x < 1000; x++)
+       
+        for(int x = 0; x < 10000; x++)
             ;
+	}
     }
     return (0); 
 }
