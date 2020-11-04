@@ -1,5 +1,3 @@
-USB = /dev/ttyUSB0
-
 all : hex flash
 
 hex :
@@ -7,4 +5,4 @@ hex :
 	avr-objcopy -j .text -j .data -O ihex main.bin main.hex
 
 flash : 
-	avrdude -p atmega328p -c arduino -P $(USB) -b 115200  -D -U flash:w:main.hex
+	avrdude -p atmega328p -c arduino -P /dev/tty.SLAB_USBtoUART -b 115200  -D -U flash:w:main.hex
