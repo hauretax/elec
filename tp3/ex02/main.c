@@ -24,19 +24,21 @@ void uart_init(unsigned int ubrr)
 }
 
 void uart_tx(char c){
+   //waiting vvoid buffer
+
+   while(!(UCSR0A & (1 << UDRE0)));
+      if(UDR0 == '\r'){
+         UDR0 = '\n';
+         while(!(UCSR0A & (1 << UDRE0)));
+      }
    UDR0 = c;
 }
 
-void uart_printstr(char *str){
-   int i = 0;
+char uart_rx(void){
+   //waiting reception
+   while(!(UCSR0A & (1 << RXC0)));
 
-   while (str[i]){
-      while(!(UCSR0A & (1<<UDRE0)))
-         ;
-      uart_tx(str[i]);
-      i++;
-   }
-      
+   return(UDR0);
 }
 
 int main()
@@ -44,11 +46,6 @@ int main()
    uart_init(MYUBRR);
     while(1)
     {
-         uart_printstr("Hello World!\n\r");
-      for(int x = 0; x<30000; x++){
-         for(int w = 0; w< 56; w++)
-               ;
-            ;
-         }
+      uart_tx(uart_rx());
     }
 }

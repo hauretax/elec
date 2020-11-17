@@ -1,6 +1,6 @@
 #include <avr/io.h>
 #define MYUBRR 16000000/8/115000-1
-
+/*
 #define  interrupt_handler(vector, ...) \
          void vector (void) __attribute__ ((signal)) __VA_ARGS__; \
          void vector (void)
@@ -8,7 +8,7 @@
 interrupt_handler(TIMER0_COMPA_vect){  
 
 }
-
+*/
 void uart_init(unsigned int ubrr)
 {
    //set buffer to send
@@ -20,8 +20,8 @@ void uart_init(unsigned int ubrr)
    UCSR0C |= (1<<UCSZ01);
 }
 
-void uart_tx(){
-   UDR0 = 'z';
+void uart_tx(char c){
+   UDR0 = c;
 }
 
 int main()
@@ -29,9 +29,11 @@ int main()
    uart_init(MYUBRR);
     while(1)
     {
-      for(int x = 0; x<1600000; x++){
-         ;
+         uart_tx('z');
+      for(int x = 0; x<30000; x++){
+         for(int w = 0; w< 28; w++)
+               ;
+            ;
          }
-         uart_tx();
     }
 }
