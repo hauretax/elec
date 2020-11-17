@@ -4,9 +4,10 @@
          void vector (void) __attribute__ ((signal)) __VA_ARGS__; \
          void vector (void)
 
-volatile int i;
 
-interrupt_handler(TIMER0_COMPA_vect){    
+
+interrupt_handler(TIMER0_COMPA_vect){  
+   static int i = 1;  
    if(ICR1 == OCR1A)
       i = 0;
    if(!(OCR1A))
@@ -21,7 +22,6 @@ interrupt_handler(TIMER0_COMPA_vect){
 
 int main()
 {
-   i=1;
    //set toutes les pin B en output
    DDRB |= (1 << PB1);
    DDRB |= (1 << PB2);
@@ -50,17 +50,15 @@ int main()
    TCCR0A |= (1 << WGM01);
    TCCR0A |= (1 << WGM00);
    TCCR0B |= (1 << WGM02);
-   //activer linterupte!!!!!
-   SREG = 0b10000000;
    //set maske 
-   TIMSK0 = (1 << INT1);
+   TIMSK0 |= (1 << INT1);
+   //activer linterupte!!!!!
+   SREG |= 0b10000000;
    //set le max
    OCR0A = 255;
    //set clock timer a 1024
    TCCR0B |= (1 << CS02);
    TCCR0B |= (1 << CS00);
-
-
    while(1)
    {
    }

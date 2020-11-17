@@ -1,6 +1,6 @@
 #include <avr/io.h>
 
-#define  interrupt_handler(vector, ...) \
+#define  interrupt_handler(vector) \
          void vector (void) __attribute__ ((signal)) __VA_ARGS__; \
          void vector (void)
 
@@ -15,10 +15,10 @@ int main()
    DDRB |= (1 << PB2);
    DDRB |= (1 << PB3);
    DDRB |= (1 << PB0);
-   //activer linterupte!!!!!
-   SREG = 0b10000000;
-   //set maske 
+   //1 set maske 
    EIMSK = (1 << INT1);
+   //2 activer linterupte!!!!!
+   SREG = 0b10000000;
 
    while(1)
    {
