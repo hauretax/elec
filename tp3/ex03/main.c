@@ -33,14 +33,15 @@ void uart_tx(char c){
 }
 
 interrupt_handler(USART_RX_vect){ 
-   while(!(UCSR0A & (1 << RXC0)));
-   char q = UDR0;  //je rajoute une variable pour ne rien comparer as UDR0
+   //while(!(UCSR0A & (1 << RXC0)));
+  /* char q = UDR0;  //je rajoute une variable pour ne rien comparer as UDR0
    if(q >= 'A' && q <= 'Z')
       uart_tx(q + 32);
    else if(q >= 'a' && q <= 'z') //fait des bugs quand je compare as UDR0
       uart_tx(q - 32);
    else
-      uart_tx(q);
+      uart_tx(q);*/
+   uart_tx('b');
 }
 
 int main()

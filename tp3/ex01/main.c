@@ -1,14 +1,14 @@
 #include <avr/io.h>
 #define MYUBRR 16000000/8/115000-1
-/*
-#define  interrupt_handler(vector, ...) \
-         void vector (void) __attribute__ ((signal)) __VA_ARGS__; \
+
+#define  interrupt_handler(vector) \
+         void vector (void) __attribute__ ((signal)); \
          void vector (void)
 
 interrupt_handler(TIMER0_COMPA_vect){  
 
 }
-*/
+
 void uart_init(unsigned int ubrr)
 {
    //double speed operation
@@ -39,16 +39,30 @@ void uart_printstr(char *str){
       
 }
 
+interrupt_handler(TIMER1_COMPA_vect){
+   uart_printstr("Hello World!\n\r");
+}
+
 int main()
 {  
+
+   //set clear on compar match
+   TCCR1A |= (1 << COM1A1);
+   //set le mode 4
+   TCCR1A |= (1 << WGM12);
+   //compare A match is enabled
+   TIMSK1 |= (1 << OCIE1A);
+   //active l interupte!
+   SREG |= (1 << SREG_I);
+   //set le top
+   OCR1A = 625;
+   //set prescaling to 1024
+   TCCR1B |= (1 << CS12);
+   TCCR1B |= (1 << CS10);
+
+
    uart_init(MYUBRR);
     while(1)
     {
-         uart_printstr("Hello World!\n\r");
-      for(int x = 0; x<30000; x++){
-         for(int w = 0; w< 56; w++)
-               ;
-            ;
-         }
     }
 }

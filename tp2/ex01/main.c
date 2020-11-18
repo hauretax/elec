@@ -55,7 +55,7 @@ int main()
    //activer linterupte!!!!!
    SREG |= 0b10000000;
    //set le max
-   OCR0A = 255;
+   OCR0A = 25;
    //set clock timer a 1024
    TCCR0B |= (1 << CS02);
    TCCR0B |= (1 << CS00);
