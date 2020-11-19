@@ -39,12 +39,7 @@ void uart_printstr(char *str){
       i++;
    }    
 }
-/*
-interrupt_handler(USART_RX_vect){ 
-   while(!(UCSR0A & (1 << RXC0)));
-   uart_tx('q');
-     // uart_printstr("abcd");
-}*/
+
 
 char uart_rx(void){
    //waiting reception
@@ -52,13 +47,19 @@ char uart_rx(void){
    return(UDR0);
 }
 
-int str_cmp(char *a, char *b){
+/*int str_cmp(char *a, char *b){
    int i = 0;
-   while(a[i] && b[i] && (a[i] == b[i])){
+   while(a[i] && b[i] && a[i] == b[i]){
       i++;
    }
-   return(a[i] != b[i]);
-}
+   uart_tx('[');
+   uart_tx(a[i]);
+   uart_tx(b[i]);
+uart_tx(']');
+
+   return((unsigned char)b[i] - (unsigned char)a[i]);
+}*/
+
 
 int main()
 {  
@@ -79,7 +80,7 @@ int main()
             login[i] = '\0';
              break ;
          }
-         if(login[i] == 127 && i != 0){
+         else if(login[i] == 127 && i != 0){
             i--;
             login[i] = '\0';
             uart_tx(8);
@@ -99,9 +100,9 @@ int main()
             password[i] = '\0';
              break ;
          }
-         if(login[i] == 127 && i != 0){
+         else if(password[i] == 127 && i != 0){
             i--;
-            login[i] = '\0';
+            password[i] = '\0';
             uart_tx(8);
             uart_tx(' ');
             uart_tx(8);
@@ -112,20 +113,34 @@ int main()
          }
       }
       i = 0;
-      if(str_cmp(login, "huggo") && str_cmp(password, "123"))
+      char *a = "huggo";
+      char *b = "123";
+      while(login[i] && a[i] && login[i] == a[i]){
+         i++;
+      }
+      i = 0;
+      while(password[i] && b[i] && password[i] == b[i]){
+         i++;
+      }
+
+      if(login[i] - a[i] || password[i] - b[i]){ //la commande voule est if(str_cmp(login, "huggo") || str_cmp(login, "123"))
          uart_printstr("\n\rMauvaise combinaison username/password\n\n\n\r");
+      }
       else{
          uart_printstr("\n\rCOUCOU ");
          uart_printstr(login);
          uart_printstr("!!!!!!!!!!!!!!!!");
-         PORTB = 0b1000;
          while(1){
-         if (PORTB == 0b1111)
-            PORTB = 0b1000;
-         for(int x = 0;x < 1000; x++)
-            ;
-            PORTB >>=1;
+            PORTB = PORTB << 1;
+        long x = 0;
+        while(x < 200000)
+            x++;
+        PORTB = PORTB >> 1;
+        x = 0;
+        while(x < 200000)
+            x++;
          }
       }
+      i = 0;
    }
 }
